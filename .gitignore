@@ -1,0 +1,13 @@
+# Project directory
+local_driver/
+target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Some resources
+*.exe
+
+#VS Code
+.vscode/
