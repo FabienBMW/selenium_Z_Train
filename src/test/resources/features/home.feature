@@ -86,7 +86,7 @@ Feature: As a customer, I am loggin and I want to shop
     Then Spawn a popup on the page with description of the <article> and the <precise_price>
 
     Examples:
-      | article              | precise_price |
+      | article              | precismmoe_price |
       | Yucca Elephantipes   | 9.99          |
       | I-phone PRO 256 NOIR | 1259.02       |
 
