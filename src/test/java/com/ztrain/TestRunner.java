@@ -18,7 +18,8 @@ import org.testng.annotations.BeforeClass;
                 "pretty",
                 "json:target/cucumber-report.json",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
-        }
+        },
+        tags = "@TEST_OF-900"
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 

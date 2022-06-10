@@ -283,4 +283,17 @@ public class HomePage extends Page {
     public boolean isDescription() {
         return waitUntil(visibilityOf(popupDescription));
     }
+
+    public void addToCartWithIcon(String productN) {
+        if (waitUntil(visibilityOfAllElements(addToCartIcons))) {
+            int index = getSpecificWebElement(listOfProducts, productN);
+            moveToElement().moveToElement(listOfProducts.get(index)).perform();
+            clickOn(addToCartIcons.get(index));
+        }
+
+    }
+
+    public double totalCartPriceCalculation() {
+        return productCartPrice.stream().mapToDouble(webElement -> Double.parseDouble(getText(webElement))).sum();
+    }
 }

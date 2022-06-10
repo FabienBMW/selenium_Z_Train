@@ -152,4 +152,14 @@ public class HomeSteps extends Page {
         assertEquals(price, homePage.getPopupPrice(), "Prices are not matched");
         assertTrue(homePage.isDescription(), "No description provided");
     }
+
+    @When("User clicks on the basket icon of the products {string}")
+    public void userClicksOnTheBasketIconOfTheProducts(String arg0) {
+        homePage.addToCartWithIcon(arg0);
+    }
+
+    @Then("User should see the sum total of the prices of the items in the cart")
+    public void userShouldSeeTheSumTotalOfThePricesOfTheItemsInTheCart() {
+        assertEquals(homePage.totalCartPriceCalculation(), homePage.getTotalPriceCart(), "Prices are not the same");
+    }
 }

@@ -86,6 +86,21 @@ Feature: As a customer, I am loggin and I want to shop
     Then Spawn a popup on the page with description of the <article> and the <precise_price>
 
     Examples:
-      | article              | precise_price | email                             | password |
-      | Yucca Elephantipes   | 9.99          | sehajpreet2.nicholi@orperfect.com | hqqps2J$ |
-      | I-phone PRO 256 NOIR | 1259.02       | sehajpreet2.nicholi@orperfect.com | hqqps2J$ |
+      | article              | precise_price |
+      | Yucca Elephantipes   | 9.99          |
+      | I-phone PRO 256 NOIR | 1259.02       |
+
+  @TEST_OF-900
+  Scenario Outline:
+    When User clicks on the basket icon of the products "T-shirt en coton biologique"
+    And he observes a pop pop which indicates the following message <message>
+    And User clicks on the basket icon of the products "Ampoule Vecteur Incandescent"
+    And he observes a pop pop which indicates the following message <message>
+    And User clicks on the basket icon of the products "Chaussures Hommes de Ville"
+    And he observes a pop pop which indicates the following message <message>
+    And user clicks on cart icon
+    Then User should see the sum total of the prices of the items in the cart
+
+    Examples:
+      | message                       |
+      | Votre panier à été mis à jour |
