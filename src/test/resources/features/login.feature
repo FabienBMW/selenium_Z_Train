@@ -50,3 +50,13 @@ Feature: As a customer I want to login so that I can shop
     Examples:
       |email             | password|
       |237pk69@gmail.com | P@wk/*69|
+
+#  @TEST_OF-1016
+#  Scenario Outline:
+#    Given User is on the login page
+#    When The user click on <social_network> icon
+#    Then The user is redirected to a <social_network>
+#    But No change on the page
+#    Examples:
+#      |social_network|
+#      | google       |

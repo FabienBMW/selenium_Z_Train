@@ -2,6 +2,8 @@ package com.ztrain.pageObject;
 
 import com.ztrain.context.Context;
 import com.ztrain.context.ScenarioContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,8 +13,11 @@ import java.util.stream.Collectors;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
-public class HomePage extends Page{
+public class HomePage extends Page {
+    private final static Logger LOG = LogManager.getLogger(Page.class);
 
+    @FindBy(className = "style_quantity_in__XmF4D")
+    private List<WebElement> plusIcon;
     @FindBy(css = "nav h1")
     private WebElement ztrain_logo;
 
@@ -50,7 +55,10 @@ public class HomePage extends Page{
     private WebElement cardIcon;
 
     @FindBy(className = "style_productName__lrC3N")
-    private WebElement productName;
+    private List<WebElement> productName;
+
+    @FindBy(css = "#style_quantity_wrapper__2QMug > button:nth-child(3) > svg")
+    private WebElement addQuantityButton;
 
     @FindBy(className = "style_btn_add_cart__WFoN1")
     private List<WebElement> addToCartIcons;
@@ -59,9 +67,12 @@ public class HomePage extends Page{
     private WebElement inputQuantity;
 
     @FindBy(className = "style_trash_product_cart__7Yzni")
-    private WebElement deleteProductIcon;
+    private List<WebElement> deleteProductIcon;
 
     @FindBy(css = "div.style_card_body__EhpLW > p:nth-child(2)")
+    private List<WebElement> productCartPrice;
+
+    @FindBy(id = "style_price__QNXBx")
     private WebElement productPrice;
 
     @FindBy(css = "#style_totalPrice__o2yCy > h5:nth-child(2)")
@@ -100,6 +111,15 @@ public class HomePage extends Page{
     @FindBy(css = "#style_checkout_wrapper__JTsFz>h1")
     private WebElement ValidateOderTitle;
 
+    @FindBy(css = "style_card__JLMp6")
+    private List<WebElement> cartProducts;
+
+    @FindBy(css = "#style_price__QNXBx > span")
+    private WebElement popupPrice;
+
+    @FindBy(css = "#style_detail_wrapper__a7fpS > div:nth-child(4)")
+    private WebElement popupDescription;
+
 
     public void goToLoginPage() {
         driver.get(ENV.getUrl("/auth/login"));
@@ -131,17 +151,6 @@ public class HomePage extends Page{
     }
 
     public void selectArticle(String article) {
-        /*waitUntil(visibilityOf(this.products));
-        this.scrollDownToElement(productTitle);
-        action.moveToElement(listOfProducts.get(0)).build().perform();
-        action.moveToElement(addToCartIcons.get(0))
-                .click()
-                .perform();
-
-        action.moveToElement(listOfProducts.get(1)).build().perform();
-        action.moveToElement(addToCartIcons.get(1))
-                .click()
-                .perform();*/
         if (longUntil(visibilityOfAllElements(listOfProducts))) {
             if (longUntil(ExpectedConditions.visibilityOfAllElements(listOfProducts))) {
                 clickOn(listOfProducts.stream()
@@ -158,26 +167,37 @@ public class HomePage extends Page{
     }
 
     public String addedToCartMessage() {
-        return getText(addToCartMessage);
+        String message = getText(addToCartMessage);
+        if (waitUntil(invisibilityOf(addToCartMessage)))
+            LOG.info("La notif a disparu");
+        return message;
     }
 
     public void openCard() {
+        if (waitUntil(visibilityOf(addToCartMessage)))
+            waitUntil(invisibilityOf(addToCartMessage));
         clickOn(cardIcon);
-        if(waitUntil(visibilityOfAllElements(productName)))
-            System.out.println("Items visible in cart");
-        else System.out.println("Items not yet visible");
+        if (waitUntil(visibilityOfAllElements(productName)))
+            LOG.info("Items visible in cart");
+        else LOG.info("Items not yet visible");
     }
 
-    public String displayProductName() {
+    /*public String displayProductName() {
         return this.productName.getText();
-    }
+    }*/
 
-    public void deleteProductCard() {
-        clickOn(deleteProductIcon);
+    public void deleteProductCard(String productN) {
+        int index = getSpecificWebElement(productName, productN);
+        clickOn(deleteProductIcon.get(index));
     }
 
     public Double getProductPrice() {
         return Double.parseDouble(this.productPrice.getText().replace(" €", ""));
+    }
+
+    public Double getProductCartPrice(String productN) {
+        int index = getSpecificWebElement(productName, productN);
+        return Double.parseDouble(this.productCartPrice.get(index).getText().replace(" €", ""));
     }
 
     public Double getTotalPriceCart() {
@@ -185,21 +205,16 @@ public class HomePage extends Page{
     }
 
     public boolean isProductDeleted(ScenarioContext context) {
-        double cartTotal = Math.round((double)context.get(Context.CART_TOTAL_PRICE)*100.0)/100.0;
-        System.out.println(cartTotal + " VART TOTAL");
-        double productPrice = Math.round((double) context.get(Context.PRODUCT_PRICE)*100.0)/100.0;
-        System.out.println(productPrice + " PRDUCT ¨>iicE");
+        double cartTotal = Math.round((double) context.get(Context.CART_TOTAL_PRICE) * 100.0) / 100.0;
+        double productPrice = Math.round((double) context.get(Context.PRODUCT_PRICE) * 100.0) / 100.0;
         double newCartPrice = cartTotal - productPrice;
-        System.out.println("le nouveau prix est " + newCartPrice);
-        if (waitUntil(textToBePresentInElement(totalPriceCart, Double.toString(newCartPrice))) || totalPriceCart == null) {
-            return true;
-        }
-        return false;
+        System.out.println("le get text donne " + totalPriceCart.getText());
+        return waitUntil(textToBePresentInElement(totalPriceCart, Double.toString(newCartPrice))) || waitUntil(visibilityOf(emptyCartMessageField));
     }
 
     public void emptyCart() {
         clickOn(trashCartButton);
-        if(waitUntil(visibilityOfAllElements(emptyCartWrapper)));
+        waitUntil(visibilityOfAllElements(emptyCartWrapper));
     }
 
     public String displayEmptycartMessage() {
@@ -207,15 +222,25 @@ public class HomePage extends Page{
     }
 
     public void logOut() {
-        if(shortUntil(visibilityOf(accountIcon)))
+        if (shortUntil(visibilityOf(accountIcon)))
             action.moveToElement(accountIcon)
-                .moveToElement(logOutButton)
-                .click()
-                .perform();
+                    .moveToElement(logOutButton)
+                    .click()
+                    .perform();
     }
 
-    public void inrementQuantity() {
-        clickOn(incrementQtyButton.get(0));
+    public void increaseProductQuantity(String pN) {
+        int index = 0;
+        if (waitUntil(visibilityOfAllElements(productName))) {
+            for (WebElement productN : productName) {
+                if (productN.getText().contains(pN.substring(0, 15))) {
+                    break;
+                }
+                index++;
+            }
+            clickOn(plusIcon.get(index));
+        }
+
     }
 
     public void decrementQuantity() {
@@ -230,4 +255,32 @@ public class HomePage extends Page{
         return this.ValidateOderTitle.getText();
     }
 
+    public boolean isProductQuantityAdded(double productPrice) {
+        double newTotalCartPrice = Math.round((getTotalPriceCart() + productPrice) * 100) / 100.0;
+        return waitUntil(textToBePresentInElement(totalPriceCart, Double.toString(newTotalCartPrice)));
+    }
+
+    public void addProductQuantity() {
+        clickOn(addQuantityButton);
+    }
+
+    public String getProductQuantity(String pN) {
+       int index = getSpecificWebElement(productName, pN);
+       if (index == -1)
+           return "0";
+        return getText(quantityField.get(index));
+    }
+
+    public boolean isQuantityUpdated(String productN, String actualQuantity) {
+        int index = getSpecificWebElement(productName, productN);
+        return waitUntil(textToBePresentInElement(quantityField.get(index), actualQuantity));
+    }
+
+    public String getPopupPrice() {
+        return getText(popupPrice).replace(" €", "");
+    }
+
+    public boolean isDescription() {
+        return waitUntil(visibilityOf(popupDescription));
+    }
 }

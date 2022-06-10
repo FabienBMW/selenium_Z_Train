@@ -15,8 +15,7 @@ import org.testng.AssertJUnit;
 import java.util.List;
 import java.util.Map;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class HomeSteps extends Page {
     private HomePage homePage;
@@ -55,6 +54,7 @@ public class HomeSteps extends Page {
 
     @And("he clicks on add to cart")
     public void heClicksOnAdd() {
+        context.set(Context.PRODUCT_PRICE, homePage.getProductPrice());
         homePage.addToCart();
     }
 
@@ -64,17 +64,18 @@ public class HomeSteps extends Page {
     }
 
     // TEST_OF-839: Delete product to card
-    @And("User clicks on delete icon of product")
-    public void userClicksOnDeleteIconOfProduct() {
-        context.set(Context.PRODUCT_PRICE, homePage.getProductPrice());
+    @And("User clicks on delete icon of {string}")
+    public void userClicksOnDeleteIconOfProduct(String productName) {
+        context.set(Context.PRODUCT_PRICE, homePage.getProductCartPrice(productName));
         context.set(Context.CART_TOTAL_PRICE, homePage.getTotalPriceCart());
-        homePage.deleteProductCard();
+        homePage.deleteProductCard(productName);
     }
 
     @Then("The product is not already visible in the card")
     public void theProductIsNotAlreadyVisibleInTheCard() {
-
-        assertTrue(homePage.isProductDeleted(context));
+        boolean result = homePage.isProductDeleted(context);
+        System.out.println("le resultat est " + result);
+        assertTrue(result);
     }
 
     //TEST_OF-902: Trash cart
@@ -108,5 +109,47 @@ public class HomeSteps extends Page {
     @And("user clicks on cart icon")
     public void userClicksOnCartIcon() {
         homePage.openCard();
+    }
+
+    @And("click on the + button to increase the quantity of this product in the cart {string}")
+    public void clickOnTheButtonToIncreaseTheQuantityOfThisProductInTheCart(String pN) {
+        homePage.increaseProductQuantity(pN);
+    }
+
+    @And("he sees the notification")
+    public void heSeesTheNotification() {
+        assertEquals("Votre panier à été mis à jour", homePage.addedToCartMessage());
+    }
+
+
+    @Then("we observe in the list that the basket is modified, the quantity of the product has increased")
+    public void weObserveInTheListThatTheBasketIsModifiedTheQuantityOfTheProductHasIncreased() {
+        assertTrue(homePage.isProductQuantityAdded((Double) context.get(Context.PRODUCT_PRICE)));
+    }
+
+    @And("he fills in the quantity of the product to add with + icons")
+    public void heFillsInTheQuantityOfTheProductToAddWithIcons() {
+        if (context.get(Context.PRODUCT_QUANTITY) != null)
+            context.set(Context.PRODUCT_QUANTITY, ((int) context.get(Context.PRODUCT_QUANTITY)) + 2);
+        else
+            context.set(Context.PRODUCT_QUANTITY, 2);
+        homePage.addProductQuantity();
+    }
+
+    @Then("user observes that the basket has not been updated {string}")
+    public void weObserveThatTheBasketHasNotBeenUpdated(String productName) {
+        assertFalse(homePage.isQuantityUpdated(productName, String.valueOf(context.get(Context.PRODUCT_QUANTITY)) ));
+    }
+
+    @Given("user knows the quantity of {string} in cart")
+    public void userKnowsTheQuantityOfInCart(String arg0) {
+        homePage.openCard();
+        context.set(Context.PRODUCT_QUANTITY, Integer.parseInt(homePage.getProductQuantity(arg0)));
+    }
+
+    @Then("^Spawn a popup on the page with description of the (.*) and the (.*)$")
+    public void spawnAPopupOnThePageWithDescriptionOfTheArticleAndThePrecise_price(String product, String price) {
+        assertEquals(price, homePage.getPopupPrice(), "Prices are not matched");
+        assertTrue(homePage.isDescription(), "No description provided");
     }
 }

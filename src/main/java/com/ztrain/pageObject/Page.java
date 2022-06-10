@@ -2,6 +2,7 @@ package com.ztrain.pageObject;
 
 import com.ztrain.config.Env;
 import com.ztrain.config.SystemPropertiesReader;
+import com.ztrain.context.ScenarioContext;
 import com.ztrain.driver.WebDriverManager;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Attachment;
@@ -14,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.ByteArrayInputStream;
 import java.time.Duration;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -33,6 +35,7 @@ public class Page {
     protected WebDriverWait loadingWait;
     protected WebDriverWait shortWait;
     protected WebDriverWait longWait;
+    public ScenarioContext context = new ScenarioContext();
 
     public Page() {
         this.driver = WebDriverManager.getDriver();
@@ -88,10 +91,10 @@ public class Page {
      */
     protected void waitForLoadingPage(){
         if(!longUntil(driver->js.executeScript("return document.readyState").equals("complete") || js.executeScript("return document.readyState").equals("interactive") )){
-            System.out.println(driver.getCurrentUrl() + " not loaded");
+            LOG.error(driver.getCurrentUrl() + " not loaded");
             return;
         }
-        System.out.println(driver.getCurrentUrl() + " successfully loaded");
+        LOG.info(driver.getCurrentUrl() + " successfully loaded");
     }
 
     /**
@@ -105,11 +108,11 @@ public class Page {
 
     protected void clickOn(WebElement element){
         if( !shortUntil(visibilityOf(element)) ){
-            System.out.println("Element not visible after click");
+            LOG.error("Element not visible after click");
         }
 
         if( !shortUntil(elementToBeClickable(element))){
-            System.out.println("Element not clickable");
+            LOG.error("Element not clickable");
         }
         element.click();
     }
@@ -146,5 +149,18 @@ public class Page {
         if (waitUntil(visibilityOf(elt)))
             return elt.getText();
         return "Element was not found";
+    }
+
+    public int getSpecificWebElement(List<WebElement> webElements, String searchText) {
+        int index = 0;
+        for (WebElement webElement : webElements) {
+            if (webElement.getText().contains(searchText.substring(0, 15))) {
+                break;
+            }
+            index++;
+        }
+        if (index >= webElements.size())
+            return -1 ;
+        return index;
     }
 }

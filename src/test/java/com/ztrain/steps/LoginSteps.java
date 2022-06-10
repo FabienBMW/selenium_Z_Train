@@ -3,10 +3,10 @@ package com.ztrain.steps;
 import com.ztrain.pageObject.HomePage;
 import com.ztrain.pageObject.LoginPage;
 import com.ztrain.pageObject.RegistrationPage;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import com.ztrain.pageObject.SocialNetworkPage;
+import io.cucumber.java.en.*;
+
+import java.util.Locale;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -17,11 +17,13 @@ public class LoginSteps {
     private LoginPage   loginPage;
     private HomePage homepage;
     private RegistrationPage registrationPage;
+    private SocialNetworkPage networkPage;
 
-    public LoginSteps(LoginPage loginPage, HomePage homepage, RegistrationPage registrationPage) {
+    public LoginSteps(LoginPage loginPage, HomePage homepage, RegistrationPage registrationPage, SocialNetworkPage networkPage) {
         this.loginPage = loginPage;
         this.homepage = homepage;
         this.registrationPage = registrationPage;
+        this.networkPage = networkPage;
     }
 
     // TEST_OF-808: Verify successful login with credentials
@@ -94,5 +96,23 @@ public class LoginSteps {
     @Then("The products page should display")
     public void theProductsPageShouldDisplay() {
         assertTrue(homepage.displayProductPage(),  "This is not product page");
+    }
+
+    @When("^The user click on (.*) icon$")
+    public void theUserClickOnSocial_networkIcon(String socialNetwork) {
+        loginPage.socialConnection();
+    }
+
+    @Then("^The user is redirected to a (.*)$")
+    public void theUserIsRedirectedToASocial_network(String socialNetwork) {
+
+        assertTrue(loginPage.getNewWindow(socialNetwork).contains(socialNetwork.toLowerCase()));
+        networkPage.fillGoogleEmailField("bibo.inator@gmail.com");
+        networkPage.fillPasswordField("G123456789");
+    }
+
+    @But("No change on the page")
+    public void noChangeOnThePage() {
+        assertTrue(homepage.isZTrainLogoDisplayed());
     }
 }

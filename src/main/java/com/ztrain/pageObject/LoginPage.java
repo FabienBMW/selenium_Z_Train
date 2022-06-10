@@ -1,10 +1,13 @@
 package com.ztrain.pageObject;
 
+import com.ztrain.context.Context;
+import com.ztrain.context.ScenarioContext;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.TreeSet;
 
 public class LoginPage extends Page {
 
@@ -40,6 +43,16 @@ public class LoginPage extends Page {
 
     @FindBy(id = "btn_reset_password")
     private WebElement resetButton;
+
+    @FindBy(css = "#__next > div > main > div.style_col_2__kzyDS > div > button")
+    private WebElement socialConnectionButton;
+
+    /*@FindBy(css = "#identifierId")
+    private WebElement emailAddressGoogle;
+    @FindBy(className = "VfPpkd-RLmnJb")
+    private WebElement next;
+    @FindBy(className = "whsOnd zHQkBf")
+    private WebElement googlePassword;*/
 
     public void goToLoginPage() {
         driver.get(ENV.getUrl("/auth/login"));
@@ -87,4 +100,36 @@ public class LoginPage extends Page {
         return this.titleLoginPage.getText();
     }
 
+    public void socialConnection() {
+        clickOn(socialConnectionButton);
+    }
+
+    public String getNewWindow(String socialNetwork) {
+        String motherWindow = driver.getWindowHandle();
+        context.set(Context.WINDOW, motherWindow);
+        String lastWindowHandle = new TreeSet<>(driver.getWindowHandles()).last();
+        driver.switchTo().window(lastWindowHandle);
+        String url = driver.getCurrentUrl();
+        switch (socialNetwork) {
+            case "google":
+                /*fillGoogleEmailField("bibo.inator@gmail.com");
+                fillPasswordField("G123456789");*/
+                break;
+            case "twitter":
+                break;
+        }
+        /*driver.close();
+        driver.switchTo().window(motherWindow);*/
+        return url;
+    }
+
+    /*public void fillGoogleEmailField(String googleEmail) {
+        sendKeysSlowly(emailAddressGoogle, googleEmail);
+        clickOn(next);
+    }
+
+    public void fillPasswordField(String password) {
+        sendKeysSlowly(googlePassword, password);
+        clickOn(next);
+    }*/
 }
