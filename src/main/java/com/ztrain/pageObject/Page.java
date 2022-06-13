@@ -62,6 +62,7 @@ public class Page {
             wait.until(isTrue);
             return true;
         }catch (Exception e){
+            LOG.debug(e.getMessage());
             return false;
         }
     }
@@ -154,6 +155,7 @@ public class Page {
     public int getSpecificWebElement(List<WebElement> webElements, String searchText) {
         int index = 0;
         for (WebElement webElement : webElements) {
+            System.out.println(webElement);
             if (webElement.getText().contains(searchText.substring(0, 15))) {
                 break;
             }

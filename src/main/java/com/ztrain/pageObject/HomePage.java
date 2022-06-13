@@ -120,6 +120,9 @@ public class HomePage extends Page {
     @FindBy(css = "#style_detail_wrapper__a7fpS > div:nth-child(4)")
     private WebElement popupDescription;
 
+    @FindBy(className = "style_card_footer__q1lbJ")
+    private List<WebElement> productsName;
+
 
     public void goToLoginPage() {
         driver.get(ENV.getUrl("/auth/login"));
@@ -265,9 +268,9 @@ public class HomePage extends Page {
     }
 
     public String getProductQuantity(String pN) {
-       int index = getSpecificWebElement(productName, pN);
-       if (index == -1)
-           return "0";
+        int index = getSpecificWebElement(productName, pN);
+        if (index == -1)
+            return "0";
         return getText(quantityField.get(index));
     }
 
@@ -285,15 +288,17 @@ public class HomePage extends Page {
     }
 
     public void addToCartWithIcon(String productN) {
-        if (waitUntil(visibilityOfAllElements(addToCartIcons))) {
-            int index = getSpecificWebElement(listOfProducts, productN);
-            moveToElement().moveToElement(listOfProducts.get(index)).perform();
+        waitUntil(visibilityOfAllElements(productsName));
+        int index = getSpecificWebElement(productsName, productN);
+        if (index >= 0) {
+            moveToElement().moveToElement(productsName.get(index)).perform();
             clickOn(addToCartIcons.get(index));
+        } else {
+            LOG.info("Produit non trouvé");
         }
-
     }
 
     public double totalCartPriceCalculation() {
-        return productCartPrice.stream().mapToDouble(webElement -> Double.parseDouble(getText(webElement))).sum();
+        return productCartPrice.stream().mapToDouble(webElement -> Double.parseDouble(getText(webElement).replace(" €", ""))).sum();
     }
 }
