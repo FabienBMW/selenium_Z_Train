@@ -16,7 +16,9 @@ import org.testng.annotations.BeforeClass;
         monochrome = true,
         plugin = {
                 "pretty",
-                "json:target/cucumber-report.json",
+                "html:target/reports/html/htmlreport",
+                "json:target/reports/jsonreports/index.json",
+                "junit:target/reports/xmlreport.xml",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
         tags = "@TEST_OF-900"
