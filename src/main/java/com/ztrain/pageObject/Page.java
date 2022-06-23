@@ -18,8 +18,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class Page {
 
@@ -154,15 +153,22 @@ public class Page {
 
     public int getSpecificWebElement(List<WebElement> webElements, String searchText) {
         int index = 0;
-        for (WebElement webElement : webElements) {
-            System.out.println(webElement);
-            if (webElement.getText().contains(searchText.substring(0, 15))) {
-                break;
+        if (waitUntil(visibilityOfAllElements(webElements))) {
+            for (WebElement webElement : webElements) {
+                System.out.println(webElement.getText());
+                if (webElement.getText().contains(searchText.substring(0, 15))) {
+                    break;
+                }
+                index++;
             }
-            index++;
+            System.out.println("la size est " + webElements.size() + " et l'index est " + index);
+            if (index > webElements.size() || webElements.size() == 0)
+                return -1 ;
+            return index;
+        } else {
+            LOG.info("Elements does not appear");
+            return -1;
         }
-        if (index >= webElements.size())
-            return -1 ;
-        return index;
+
     }
 }

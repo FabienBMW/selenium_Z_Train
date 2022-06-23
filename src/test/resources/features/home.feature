@@ -53,7 +53,7 @@ Feature: As a customer, I am loggin and I want to shop
     Then The oder validation pop-up is displaying
 
   @TEST_OF-833
-  Scenario:
+  Scenario: Increasing the quantity of a product
     When user selects "I-phone PRO 256 NOIR"
     And he clicks on add to cart
     And he sees the notification
@@ -62,7 +62,7 @@ Feature: As a customer, I am loggin and I want to shop
     Then we observe in the list that the basket is modified, the quantity of the product has increased
 
   @TEST_OF-837
-  Scenario Outline:
+  Scenario Outline: Increasing the quantity of a product from the add product
     Given user knows the quantity of "<product>" in cart
     When user selects "<product>"
     And he fills in the quantity of the product to add with + icons
@@ -86,11 +86,11 @@ Feature: As a customer, I am loggin and I want to shop
     Then Spawn a popup on the page with description of the <article> and the <precise_price>
 
     Examples:
-      | article              | precise_price |
-      | Yucca Elephantipes   | 9.99          |
+      | article            | precise_price |
+      | Yucca Elephantipes | 9.99          |
 
   @TEST_OF-900
-  Scenario Outline:
+  Scenario Outline: check total cart price
     When User clicks on the basket icon of the products "T-shirt en coton biologique"
     And he observes a pop pop which indicates the following message <message>
     And User clicks on the basket icon of the products "Ampoule Vecteur Incandescent"
@@ -103,3 +103,18 @@ Feature: As a customer, I am loggin and I want to shop
     Examples:
       | message                       |
       | Votre panier à été mis à jour |
+
+  @TEST_OF-832
+  Scenario Outline: Decrement quantity of a product
+    Given user knows the quantity of "<product>" in cart
+    When user selects "<product>"
+    And user enters product quantity "<quantity>"
+    And he clicks on add to cart
+    Then he observes a pop pop which indicates the following message <message>
+    When user clicks on cart icon
+    And user clicks "<number>" times on the (-) button to reduce the quantity of "<product>"
+#    Then we observe in the list that the basket is modified the product has been deleted or its quantity reduced été mis à jour"
+
+    Examples:
+      | product            | message                       | number | quantity|
+      | Yucca Elephantipes | Votre panier à été mis à jour | 3      | 8       |

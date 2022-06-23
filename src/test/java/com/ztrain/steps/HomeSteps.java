@@ -162,4 +162,15 @@ public class HomeSteps extends Page {
     public void userShouldSeeTheSumTotalOfThePricesOfTheItemsInTheCart() {
         assertEquals(homePage.totalCartPriceCalculation(), homePage.getTotalPriceCart(), "Prices are not the same");
     }
+
+    @And("user enters product quantity {string}")
+    public void userEntersProductQuantity(String quantity) {
+        homePage.fillProductQuantity(quantity);
+        context.set(Context.PRODUCT_QUANTITY, (int) context.get(Context.PRODUCT_QUANTITY) + Integer.parseInt(quantity));
+    }
+
+    @And("user clicks {string} times on the \\(-) button to reduce the quantity of {string}")
+    public void userClicksTimesOnTheButtonToReduceTheQuantityOfThisProduct(String number, String product) {
+        homePage.decreaseProductQuantity(product, number, (int) context.get(Context.PRODUCT_QUANTITY));
+    }
 }

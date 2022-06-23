@@ -18,6 +18,9 @@ public class HomePage extends Page {
 
     @FindBy(className = "style_quantity_in__XmF4D")
     private List<WebElement> plusIcon;
+    @FindBy(className = "style_quantity_dec__nm5ig")
+    private List<WebElement> decreaseQuantityCart;
+
     @FindBy(css = "nav h1")
     private WebElement ztrain_logo;
 
@@ -111,7 +114,7 @@ public class HomePage extends Page {
     @FindBy(css = "#style_checkout_wrapper__JTsFz>h1")
     private WebElement ValidateOderTitle;
 
-    @FindBy(css = "style_card__JLMp6")
+    @FindBy(css = "style_card_body__EhpLW")
     private List<WebElement> cartProducts;
 
     @FindBy(css = "#style_price__QNXBx > span")
@@ -300,5 +303,22 @@ public class HomePage extends Page {
 
     public double totalCartPriceCalculation() {
         return productCartPrice.stream().mapToDouble(webElement -> Double.parseDouble(getText(webElement).replace(" €", ""))).sum();
+    }
+
+    public void fillProductQuantity(String quantity) {
+        sendKeysSlowly(inputQuantity, quantity);
+    }
+
+    public void decreaseProductQuantity(String productN, String number, int totalQuantity) {
+        int index = getSpecificWebElement(productName, productN);
+        for (int i =0; i< Integer.parseInt(number); i++) {
+            clickOn(decreaseQuantityCart.get(index));
+            if (waitUntil(textToBePresentInElement(quantityField.get(index), String.valueOf(totalQuantity-1)))) {
+                totalQuantity--;
+                LOG.info("button clicked");
+            }
+            System.out.println(quantityField.get(index).getText());
+        }
+
     }
 }
