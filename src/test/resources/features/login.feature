@@ -51,6 +51,20 @@ Feature: As a customer I want to login so that I can shop
       |email             | password|
       |237pk69@gmail.com | P@wk/*69|
 
+  @TEST_OF-1009
+  Scenario: Modification du wording de la page de connexion & de bienvenue
+    Given User is on the login page
+    Then  The user reads : "Vos courses au quotidien, en quelques clics"
+    Given User is on the register page
+    Then  The user reads : "Vos courses au quotidien, en quelques clics"
+
+  @TEST_OF-1014
+  Scenario: Vérification du format de l'email lors de la connexion
+    Given User is on the login page
+    And The user fill the email's field with value "237pk69@gmail"
+    When the user clicks on the next field
+    Then An error appears to report invalid email syntax
+
 #  @TEST_OF-1016
 #  Scenario Outline:
 #    Given User is on the login page

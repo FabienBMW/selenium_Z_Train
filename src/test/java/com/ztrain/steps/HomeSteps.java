@@ -96,13 +96,13 @@ public class HomeSteps extends Page {
     }
 
     //TEST_OF-901: Test the order button
-    @And("User clicks on oder button")
-    public void userClicksOnOderButton() {
+    @And("User clicks on order button")
+    public void userClicksOnOrderButton() {
         homePage.validateOder();
     }
 
-    @Then("The oder validation pop-up is displaying")
-    public void theOderValidationPopUpIsDisplaying() {
+    @Then("The order validation pop-up is displaying")
+    public void theOrderValidationPopUpIsDisplaying() {
         assertEquals(this.homePage.getTitleValidationOder(), "Valider votre commande", "it's not the page");
     }
 
@@ -177,5 +177,25 @@ public class HomeSteps extends Page {
     @Then("we observe in the list that the basket is modified the {string} has been deleted or the {string} decreases")
     public void weObserveInTheListThatTheBasketIsModifiedTheProductHasBeenDeletedOrTheQuantityDecreases(String productName, String quantity) {
         assertTrue(homePage.isQuantityUpdated(productName, String.valueOf((int) context.get(Context.PRODUCT_QUANTITY) - Integer.parseInt(quantity)) ));
+    }
+
+    @And("User sends the order form")
+    public void userSendsTheOrderForm() {
+        homePage.submitOrderForm();
+    }
+
+    @Then("A required fields error message should appear under the fields")
+    public void aRequiredFieldsErrorMessageShouldAppearUnderTheFields() {
+        assertTrue(homePage.isOrderFormErrorMessage());
+    }
+
+    @And("^User fills fields with (.*), (.*), (.*), (.*) and (.*)$")
+    public void userFillsFieldsWithCardNumberExpiredDateCvcAndAdresseDeLivraison(String cardNumber, String expirationDate, String cvc, String address, int methodeLivraison) {
+        homePage.fillPaymentForm(cardNumber, expirationDate, cvc, address, methodeLivraison);
+    }
+
+    @Then("A validation confirmation message should appear on the screen")
+    public void aValidationConfirmationMessageShouldAppearOnTheScreen() {
+        assertTrue(homePage.isPaymentMessage());
     }
 }

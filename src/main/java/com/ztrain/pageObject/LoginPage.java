@@ -47,6 +47,9 @@ public class LoginPage extends Page {
     @FindBy(css = "#__next > div > main > div.style_col_2__kzyDS > div > button")
     private WebElement socialConnectionButton;
 
+    @FindBy(className = "style_header_subTitle__jdTen")
+    private WebElement welcomeMessage;
+
     /*@FindBy(css = "#identifierId")
     private WebElement emailAddressGoogle;
     @FindBy(className = "VfPpkd-RLmnJb")
@@ -132,4 +135,24 @@ public class LoginPage extends Page {
         sendKeysSlowly(googlePassword, password);
         clickOn(next);
     }*/
+
+    public void fillEmailField(String email) {
+        sendKeysSlowly(emailField, email);
+    }
+
+    public void clickOnPasswordField() {
+        clickOn(passwordField);
+    }
+
+    public boolean isWelcomeMessage(String message) {
+        return welcomeMessage.getText().contains(message);
+    }
+
+    public boolean isEmailError() {
+        for (WebElement webElement: errorMessages) {
+            if (webElement.getText().contains("email"))
+                return true;
+        }
+        return false;
+    }
 }

@@ -115,4 +115,24 @@ public class LoginSteps {
     public void noChangeOnThePage() {
         assertTrue(homepage.isZTrainLogoDisplayed());
     }
+
+    @Then("The user reads : {string}")
+    public void theUserReads(String message) {
+        assertTrue(loginPage.isWelcomeMessage(message));
+    }
+
+    @And("The user fill the email's field with value {string}")
+    public void theUserFillTheEmailSFieldWithValue(String email) {
+        loginPage.fillEmailField(email);
+    }
+
+    @When("the user clicks on the next field")
+    public void theUserClicksOnTheNextField() {
+        loginPage.clickOnPasswordField();
+    }
+
+    @Then("An error appears to report invalid email syntax")
+    public void anErrorAppearsToReportInvalidEmailSyntax() {
+        assertTrue(loginPage.isEmailError());
+    }
 }

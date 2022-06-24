@@ -45,12 +45,12 @@ Feature: As a customer, I am loggin and I want to shop
     Then User should be redirected on login page
 
   @TEST_OF-901
-  Scenario: Test the oder button
+  Scenario: Test the order button
     When user selects "Enceinte Bluetooth portable robuste"
     And he clicks on add to cart
     And user clicks on cart icon
-    And User clicks on oder button
-    Then The oder validation pop-up is displaying
+    And User clicks on order button
+    Then The order validation pop-up is displaying
 
   @TEST_OF-833
   Scenario: Increasing the quantity of a product
@@ -120,3 +120,30 @@ Feature: As a customer, I am loggin and I want to shop
       | product                                 | message                       | number | quantity |
       | Yucca Elephantipes                      | Votre panier à été mis à jour | 3      | 8        |
       | Fauteuil Chaise Patchwork, Bois d'hévéa | Votre panier à été mis à jour | 1      | 1        |
+
+  @TEST_OF-903
+  Scenario Outline: Test fields required for payment
+    When user selects "<product>"
+    And he clicks on add to cart
+    And user clicks on cart icon
+    And User clicks on order button
+    And User sends the order form
+    Then A required fields error message should appear under the fields
+
+    Examples:
+      | product                      |
+      | Chaussures Hommes de Ville |
+
+  @TEST_OF-906
+  Scenario Outline: Payment validation
+    When user selects "<product>"
+    And he clicks on add to cart
+    And user clicks on cart icon
+    And User clicks on order button
+    And User fills fields with "<card number>", "<expired date>", "<cvc>", <adresse de livraison> and <methode_livraison>
+    And User sends the order form
+    Then A validation confirmation message should appear on the screen
+
+    Examples:
+      | product                      | card number         | expired date | cvc | adresse de livraison | methode_livraison |
+      | Chaise de Bureau Ergonomique | 4242 4242 4242 4242 | 12 / 23      | 520 | 204 Rue Manga-bell   | 1                 |

@@ -25,7 +25,7 @@ public class HomePage extends Page {
     private WebElement ztrain_logo;
 
     @FindBy(id = "style_container__P9Oh0")
-    public WebElement addToCartMessage;
+    public WebElement notifiaction;
 
     @FindBy(id = "style_popular_product_wrapper__z6J0h")
     private WebElement products;
@@ -126,6 +126,23 @@ public class HomePage extends Page {
     @FindBy(className = "style_card_footer__q1lbJ")
     private List<WebElement> productsName;
 
+    @FindBy(id = "style_btnSubmit__sn_sg")
+    private WebElement submitOrderForm;
+
+    @FindBy(className = "style_errorMessage__PLoCc")
+    private List<WebElement> orderErrorFields;
+
+    @FindBy(id = "card-number")
+    private WebElement cardNumberField;
+    @FindBy(id = "style_input_address__CrN2C")
+    private WebElement addressField;
+    @FindBy(id = "card-expiry")
+    private WebElement expireDateField;
+    @FindBy(id = "cvc")
+    private WebElement cvcField;
+    @FindBy(name = "shipping_method")
+    private List<WebElement> methodeLivraison;
+
 
     public void goToLoginPage() {
         driver.get(ENV.getUrl("/auth/login"));
@@ -173,15 +190,15 @@ public class HomePage extends Page {
     }
 
     public String addedToCartMessage() {
-        String message = getText(addToCartMessage);
-        if (waitUntil(invisibilityOf(addToCartMessage)))
+        String message = getText(notifiaction);
+        if (waitUntil(invisibilityOf(notifiaction)))
             LOG.info("La notif a disparu");
         return message;
     }
 
     public void openCard() {
-        if (waitUntil(visibilityOf(addToCartMessage)))
-            waitUntil(invisibilityOf(addToCartMessage));
+        if (waitUntil(visibilityOf(notifiaction)))
+            waitUntil(invisibilityOf(notifiaction));
         clickOn(cardIcon);
         if (waitUntil(visibilityOfAllElements(productName)))
             LOG.info("Items visible in cart");
@@ -321,6 +338,26 @@ public class HomePage extends Page {
                 LOG.info("button clicked");
             }
         }
+    }
 
+    public void submitOrderForm() {
+        clickOn(submitOrderForm);
+    }
+
+    public boolean isOrderFormErrorMessage() {
+        return shortUntil(visibilityOfAllElements(orderErrorFields));
+    }
+
+    public void fillPaymentForm(String cardNumber, String expirationDate, String cvc, String address, int methodeLiv) {
+        sendKeysSlowly(addressField, address);
+        sendKeysSlowly(cardNumberField, cardNumber);
+        sendKeysSlowly(expireDateField, expirationDate);
+        sendKeysSlowly(cvcField, cvc);
+        System.out.println(methodeLivraison.get(methodeLiv).getText());
+        clickOn(methodeLivraison.get(methodeLiv));
+    }
+
+    public boolean isPaymentMessage() {
+        return shortUntil(visibilityOfAllElements(notifiaction));
     }
 }
