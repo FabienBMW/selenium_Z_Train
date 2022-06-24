@@ -162,7 +162,7 @@ public class Page {
                 index++;
             }
             System.out.println("la size est " + webElements.size() + " et l'index est " + index);
-            if (index > webElements.size() || webElements.size() == 0)
+            if (index >= webElements.size())
                 return -1 ;
             return index;
         } else {

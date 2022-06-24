@@ -108,13 +108,15 @@ Feature: As a customer, I am loggin and I want to shop
   Scenario Outline: Decrement quantity of a product
     Given user knows the quantity of "<product>" in cart
     When user selects "<product>"
-    And user enters product quantity "<quantity>"
+    And user enters "<product>" quantity "<quantity>"
     And he clicks on add to cart
     Then he observes a pop pop which indicates the following message <message>
     When user clicks on cart icon
     And user clicks "<number>" times on the (-) button to reduce the quantity of "<product>"
-#    Then we observe in the list that the basket is modified the product has been deleted or its quantity reduced été mis à jour"
+#    Then user observes that the basket has not been updated "<product>"
+    Then we observe in the list that the basket is modified the "<product>" has been deleted or the "<number>" decreases
 
     Examples:
-      | product            | message                       | number | quantity|
-      | Yucca Elephantipes | Votre panier à été mis à jour | 3      | 8       |
+      | product                                 | message                       | number | quantity |
+      | Yucca Elephantipes                      | Votre panier à été mis à jour | 3      | 8        |
+      | Fauteuil Chaise Patchwork, Bois d'hévéa | Votre panier à été mis à jour | 1      | 1        |

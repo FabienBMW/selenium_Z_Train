@@ -163,8 +163,8 @@ public class HomeSteps extends Page {
         assertEquals(homePage.totalCartPriceCalculation(), homePage.getTotalPriceCart(), "Prices are not the same");
     }
 
-    @And("user enters product quantity {string}")
-    public void userEntersProductQuantity(String quantity) {
+    @And("user enters {string} quantity {string}")
+    public void userEntersProductQuantity(String productName, String quantity) {
         homePage.fillProductQuantity(quantity);
         context.set(Context.PRODUCT_QUANTITY, (int) context.get(Context.PRODUCT_QUANTITY) + Integer.parseInt(quantity));
     }
@@ -172,5 +172,10 @@ public class HomeSteps extends Page {
     @And("user clicks {string} times on the \\(-) button to reduce the quantity of {string}")
     public void userClicksTimesOnTheButtonToReduceTheQuantityOfThisProduct(String number, String product) {
         homePage.decreaseProductQuantity(product, number, (int) context.get(Context.PRODUCT_QUANTITY));
+    }
+
+    @Then("we observe in the list that the basket is modified the {string} has been deleted or the {string} decreases")
+    public void weObserveInTheListThatTheBasketIsModifiedTheProductHasBeenDeletedOrTheQuantityDecreases(String productName, String quantity) {
+        assertTrue(homePage.isQuantityUpdated(productName, String.valueOf((int) context.get(Context.PRODUCT_QUANTITY) - Integer.parseInt(quantity)) ));
     }
 }

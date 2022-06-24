@@ -279,6 +279,8 @@ public class HomePage extends Page {
 
     public boolean isQuantityUpdated(String productN, String actualQuantity) {
         int index = getSpecificWebElement(productName, productN);
+        if (index == -1 && actualQuantity.equals("0"))
+            return true;
         return waitUntil(textToBePresentInElement(quantityField.get(index), actualQuantity));
     }
 
@@ -306,6 +308,7 @@ public class HomePage extends Page {
     }
 
     public void fillProductQuantity(String quantity) {
+        inputQuantity.clear();
         sendKeysSlowly(inputQuantity, quantity);
     }
 
@@ -317,7 +320,6 @@ public class HomePage extends Page {
                 totalQuantity--;
                 LOG.info("button clicked");
             }
-            System.out.println(quantityField.get(index).getText());
         }
 
     }
