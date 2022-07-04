@@ -131,7 +131,7 @@ Feature: As a customer, I am loggin and I want to shop
     Then A required fields error message should appear under the fields
 
     Examples:
-      | product                      |
+      | product                    |
       | Chaussures Hommes de Ville |
 
   @TEST_OF-906
@@ -147,3 +147,15 @@ Feature: As a customer, I am loggin and I want to shop
     Examples:
       | product                      | card number         | expired date | cvc | adresse de livraison | methode_livraison |
       | Chaise de Bureau Ergonomique | 4242 4242 4242 4242 | 12 / 23      | 520 | 204 Rue Manga-bell   | 1                 |
+
+
+  @TEST_OF-1200
+  Scenario Outline: Affichage d'un message d'erreur à l'insertion d'un code promo erroné
+    When user selects "<product>"
+    When User clicks on promo button
+    And User enters promo "<code>"
+    Then The price of my item is recalculated based on the <remise>
+    Examples:
+      | code   | remise | product                      |
+      | SRDRAV | 10     | Chaise de Bureau Ergonomique |
+#      |FDHSTI | 2%    |

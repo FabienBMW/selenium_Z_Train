@@ -142,6 +142,14 @@ public class HomePage extends Page {
     private WebElement cvcField;
     @FindBy(name = "shipping_method")
     private List<WebElement> methodeLivraison;
+    @FindBy(id = "style_btn_promo_code__qcmIP")
+    private WebElement promoButton;
+    @FindBy(id = "style_input_promo_code__0V4kM")
+    private WebElement promoField;
+    @FindBy(css = "#style_price__QNXBx > div > span")
+    private WebElement newPrice;
+    @FindBy(id = "style_initial_price__Z4QbL")
+    private WebElement oldPrice;
 
 
     public void goToLoginPage() {
@@ -215,7 +223,7 @@ public class HomePage extends Page {
     }
 
     public Double getProductPrice() {
-        return Double.parseDouble(this.productPrice.getText().replace(" €", ""));
+        return getPrice(productPrice);
     }
 
     public Double getProductCartPrice(String productN) {
@@ -224,12 +232,12 @@ public class HomePage extends Page {
     }
 
     public Double getTotalPriceCart() {
-        return Double.parseDouble(this.totalPriceCart.getText().replace(" €", ""));
+        return getPrice(totalPriceCart);
     }
 
     public boolean isProductDeleted(ScenarioContext context) {
-        double cartTotal = Math.round((double) context.get(Context.CART_TOTAL_PRICE) * 100.0) / 100.0;
-        double productPrice = Math.round((double) context.get(Context.PRODUCT_PRICE) * 100.0) / 100.0;
+        double cartTotal = roundTo2Decimal((double) context.get(Context.CART_TOTAL_PRICE));
+        double productPrice = roundTo2Decimal((double) context.get(Context.PRODUCT_PRICE));
         double newCartPrice = cartTotal - productPrice;
         System.out.println("le get text donne " + totalPriceCart.getText());
         return waitUntil(textToBePresentInElement(totalPriceCart, Double.toString(newCartPrice))) || waitUntil(visibilityOf(emptyCartMessageField));
@@ -279,7 +287,7 @@ public class HomePage extends Page {
     }
 
     public boolean isProductQuantityAdded(double productPrice) {
-        double newTotalCartPrice = Math.round((getTotalPriceCart() + productPrice) * 100) / 100.0;
+        double newTotalCartPrice = roundTo2Decimal((getTotalPriceCart() + productPrice));
         return waitUntil(textToBePresentInElement(totalPriceCart, Double.toString(newTotalCartPrice)));
     }
 
@@ -359,5 +367,25 @@ public class HomePage extends Page {
 
     public boolean isPaymentMessage() {
         return shortUntil(visibilityOfAllElements(notifiaction));
+    }
+
+    public void clickPromoButton() {
+        clickOn(promoButton);
+    }
+
+    public void fillPromoField(String code) {
+        sendKeysSlowly(promoField, code);
+    }
+
+    public double calculateDiscountPrice(int discount) {
+        double old = getPrice(oldPrice);
+        double newPrice = old - (old * discount)/100;
+        return roundTo2Decimal(newPrice);
+    }
+
+    public double getNewPrice() {
+        if (shortUntil(visibilityOf(newPrice)))
+            return getPrice(newPrice);
+        return 0;
     }
 }

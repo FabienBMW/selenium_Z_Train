@@ -2,6 +2,7 @@ package com.ztrain.pageObject;
 
 import com.ztrain.config.Env;
 import com.ztrain.config.SystemPropertiesReader;
+import com.ztrain.context.Context;
 import com.ztrain.context.ScenarioContext;
 import com.ztrain.driver.WebDriverManager;
 import io.qameta.allure.Allure;
@@ -169,6 +170,13 @@ public class Page {
             LOG.info("Elements does not appear");
             return -1;
         }
+    }
 
+    public double getPrice(WebElement element) {
+        return Double.parseDouble(element.getText().replace(" €", ""));
+    }
+
+    public double roundTo2Decimal(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 }

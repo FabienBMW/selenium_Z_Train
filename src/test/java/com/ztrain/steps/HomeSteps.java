@@ -198,4 +198,20 @@ public class HomeSteps extends Page {
     public void aValidationConfirmationMessageShouldAppearOnTheScreen() {
         assertTrue(homePage.isPaymentMessage());
     }
+
+    @When("User clicks on promo button")
+    public void userClicksOnPromoButton() {
+        homePage.clickPromoButton();
+    }
+
+    @And("User enters promo {string}")
+    public void userEntersPromo(String code) {
+        homePage.fillPromoField(code);
+        homePage.clickPromoButton();
+    }
+
+    @Then("^The price of my item is recalculated based on the (.*)$")
+    public void thePriceOfMyItemIsRecalculatedBasedOnTheRemise(int discount) {
+        assertEquals(homePage.getNewPrice(), homePage.calculateDiscountPrice(discount));
+    }
 }
