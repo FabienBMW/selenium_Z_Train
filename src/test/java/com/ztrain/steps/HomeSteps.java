@@ -214,4 +214,41 @@ public class HomeSteps extends Page {
     public void thePriceOfMyItemIsRecalculatedBasedOnTheRemise(int discount) {
         assertEquals(homePage.getNewPrice(), homePage.calculateDiscountPrice(discount));
     }
+
+    @When("User clicks on 'Toutes les categories'")
+    public void userClicksOnToutesLesCategories() {
+        homePage.showAllCategories();
+    }
+
+    @Then("The user should see the product categories displayed {string} et {string}")
+    public void theUserShouldSeeTheProductCategoriesDisplayedCategorie_EtCategorie_(String arg0, String arg1) {
+        assertTrue(homePage.isCategory(arg0));
+        assertTrue(homePage.isCategory(arg1));
+    }
+
+    @And("The user selects category {string}")
+    public void theUserSelectsCategory(String arg0) {
+        homePage.selectCategory(arg0);
+    }
+
+    @Then("The user must see at least one sub-category displayed {string}")
+    public void theUserMustSeeAtLeastOneSubCategoryDisplayed(String arg0) {
+        assertTrue(homePage.verifySubCategory(arg0));
+    }
+
+    @Then("The user should see the product category displayed {string}")
+    public void theUserShouldSeeTheProductCategoryDisplayed(String arg0) {
+        assertTrue(homePage.isCategory(arg0));
+    }
+
+    @Then("The user must see the product sheet displayed")
+    public void theUserMustSeeTheProductSheetDisplayed() {
+        assertTrue(homePage.productSheetIsDisplayed());
+    }
+
+    @And("User must see attributes {string} et {string}")
+    public void userMustSeeAttributesAttribute_EtAttribute_(String arg0, String arg1) {
+        assertTrue(homePage.isProductAttribute(arg0));
+        assertTrue(homePage.isProductAttribute(arg1));
+    }
 }

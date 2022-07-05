@@ -104,6 +104,18 @@ Feature: As a customer, I am loggin and I want to shop
       | message                       |
       | Votre panier à été mis à jour |
 
+  @TEST_OF-904
+  Scenario Outline: Check the possibility of manually entering the desired quantity of products
+    Given user knows the quantity of "<product>" in cart
+    When user selects "<product>"
+    And user enters "<product>" quantity "<quantity>"
+    And he clicks on add to cart
+    Then he observes a pop pop which indicates the following message <message>
+
+    Examples:
+      | product            | message                       | quantity |
+      | Yucca Elephantipes | Votre panier à été mis à jour | 8        |
+
   @TEST_OF-832
   Scenario Outline: Decrement quantity of a product
     Given user knows the quantity of "<product>" in cart
@@ -147,6 +159,45 @@ Feature: As a customer, I am loggin and I want to shop
     Examples:
       | product                      | card number         | expired date | cvc | adresse de livraison | methode_livraison |
       | Chaise de Bureau Ergonomique | 4242 4242 4242 4242 | 12 / 23      | 520 | 204 Rue Manga-bell   | 1                 |
+
+  @TEST_OF-1166
+  Scenario Outline: Affichage des categories de produit
+    When User clicks on 'Toutes les categories'
+    Then The user should see the product categories displayed "<category_1>" et "<category_2>"
+
+    Examples:
+      | category_1 | category_2   |
+      | mode homme | electronique |
+
+
+  @TEST_OF-1167
+  Scenario Outline: Affichage des sous categories de produit
+    When User clicks on 'Toutes les categories'
+    And The user selects category "<category>"
+    Then The user must see at least one sub-category displayed "<sub_category>"
+
+    Examples:
+      | category   | sub_category |
+      | Mode homme | chaussure    |
+
+  @TEST_OF-1168
+  Scenario Outline: Affichage des categories de produit
+    When User clicks on 'Toutes les categories'
+    Then The user should see the product category displayed "<category>"
+
+    Examples:
+      | category |
+      | other    |
+
+  @TEST_OF-1169
+  Scenario Outline:
+    When user selects "<product>"
+    Then The user must see the product sheet displayed
+    And User must see attributes "<attribute_1>" et "<attribute_2>"
+
+    Examples:
+      | product                      | attribute_1 | attribute_2 |
+      | Ampoule Vecteur Incandescent | taille      | couleur     |
 
 
   @TEST_OF-1200

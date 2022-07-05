@@ -2,11 +2,13 @@ package com.ztrain.pageObject;
 
 import com.ztrain.context.Context;
 import com.ztrain.context.ScenarioContext;
+import io.cucumber.java.eo.Se;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -150,6 +152,12 @@ public class HomePage extends Page {
     private WebElement newPrice;
     @FindBy(id = "style_initial_price__Z4QbL")
     private WebElement oldPrice;
+    @FindBy(id = "style_select_cat__vyiIE")
+    private WebElement allCategories;
+    @FindBy(id = "style_content_detail__ZNkX9")
+    private WebElement productSheet;
+    @FindBy(className = "style_attribut_wrapper__zQ3W1")
+    private List<WebElement> productsAttribute;
 
 
     public void goToLoginPage() {
@@ -387,5 +395,47 @@ public class HomePage extends Page {
         if (shortUntil(visibilityOf(newPrice)))
             return getPrice(newPrice);
         return 0;
+    }
+
+    public void showAllCategories() {
+        if (waitUntil(ExpectedConditions.visibilityOfAllElements(listOfProducts))) {
+            clickOn(allCategories);
+            Select categories = new Select(allCategories);
+            System.out.println("les options sont " + categories.getOptions().get(3).getText());
+            LOG.info("categories displayed");
+        }
+    }
+
+    public boolean isCategory(String category) {
+        Select categories = new Select(allCategories);
+        long i =categories.getOptions().stream()
+                .filter(option -> option.getText().toLowerCase().contains(category))
+                .count();
+        return i != 0;
+    }
+
+    public void selectCategory(String category) {
+        Select categories = new Select(allCategories);
+        categories.selectByVisibleText(category);
+    }
+
+    public boolean verifySubCategory(String subCategory) {
+        System.out.println("le nombre total d'item est de " + productsName.size());
+        long i = productsName.stream()
+                .filter(productName -> productName.getText().toLowerCase().contains(subCategory))
+                .count();
+        System.out.println("le nombre est " + i);
+        return i != 0;
+    }
+
+    public boolean productSheetIsDisplayed() {
+        return shortUntil(visibilityOf(productSheet));
+    }
+
+    public boolean isProductAttribute(String attributeName) {
+        int number = (int) productsAttribute.stream()
+                .filter(element -> element.getText().toLowerCase().contains(attributeName))
+                .count();
+        return number > 0;
     }
 }
