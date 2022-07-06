@@ -210,7 +210,7 @@ public class HomeSteps extends Page {
         homePage.clickPromoButton();
     }
 
-    @Then("^The price of my item is recalculated based on the (.*)$")
+    @Then("^The price of my item is recalculated based on the discount of (.*)%$")
     public void thePriceOfMyItemIsRecalculatedBasedOnTheRemise(int discount) {
         assertEquals(homePage.getNewPrice(), homePage.calculateDiscountPrice(discount));
     }
@@ -250,5 +250,10 @@ public class HomeSteps extends Page {
     public void userMustSeeAttributesAttribute_EtAttribute_(String arg0, String arg1) {
         assertTrue(homePage.isProductAttribute(arg0));
         assertTrue(homePage.isProductAttribute(arg1));
+    }
+
+    @And("The user sees the different captures of the product displayed")
+    public void theUserSeesTheDifferentCapturesOfTheProductDisplayed() {
+        homePage.showCaptures();
     }
 }

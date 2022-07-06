@@ -190,7 +190,7 @@ Feature: As a customer, I am loggin and I want to shop
       | other    |
 
   @TEST_OF-1169
-  Scenario Outline:
+  Scenario Outline: Affichage des attributs de la page des produits
     When user selects "<product>"
     Then The user must see the product sheet displayed
     And User must see attributes "<attribute_1>" et "<attribute_2>"
@@ -199,14 +199,24 @@ Feature: As a customer, I am loggin and I want to shop
       | product                      | attribute_1 | attribute_2 |
       | Ampoule Vecteur Incandescent | taille      | couleur     |
 
+  @TES_OF-1181
+  Scenario Outline:
+    When user selects "<product>"
+    Then The user must see the product sheet displayed
+    And The user sees the different captures of the product displayed
+
+    Examples:
+      |product                      |
+      | Chaussures Hommes de Ville  |
+
 
   @TEST_OF-1200
   Scenario Outline: Affichage d'un message d'erreur à l'insertion d'un code promo erroné
     When user selects "<product>"
     When User clicks on promo button
     And User enters promo "<code>"
-    Then The price of my item is recalculated based on the <remise>
+    Then The price of my item is recalculated based on the discount of <remise>%
     Examples:
       | code   | remise | product                      |
-      | SRDRAV | 10     | Chaise de Bureau Ergonomique |
-#      |FDHSTI | 2%    |
+#      | SRDRAV | 10     | Chaise de Bureau Ergonomique |
+      |FDHSTI | 2    | Chaise de Bureau Ergonomique |

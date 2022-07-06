@@ -21,7 +21,7 @@ import org.testng.annotations.BeforeClass;
                 "junit:target/reports/xmlreport.xml",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
-        tags = "@TEST_OF-1169, @TEST_OF-1168"
+        tags = "@TEST_OF-1181"
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 

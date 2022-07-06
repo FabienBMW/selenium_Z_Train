@@ -158,6 +158,8 @@ public class HomePage extends Page {
     private WebElement productSheet;
     @FindBy(className = "style_attribut_wrapper__zQ3W1")
     private List<WebElement> productsAttribute;
+    @FindBy(className = "style_container_dot__i_gfz")
+    private WebElement productCaptures;
 
 
     public void goToLoginPage() {
@@ -437,5 +439,9 @@ public class HomePage extends Page {
                 .filter(element -> element.getText().toLowerCase().contains(attributeName))
                 .count();
         return number > 0;
+    }
+
+    public void showCaptures() {
+        LOG.info(productCaptures);
     }
 }
