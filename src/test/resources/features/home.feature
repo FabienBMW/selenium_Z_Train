@@ -199,15 +199,26 @@ Feature: As a customer, I am loggin and I want to shop
       | product                      | attribute_1 | attribute_2 |
       | Ampoule Vecteur Incandescent | taille      | couleur     |
 
-  @TES_OF-1181
-  Scenario Outline:
+  @TEST_OF-1181
+  Scenario Outline: Affichage des images d'un produit
     When user selects "<product>"
     Then The user must see the product sheet displayed
     And The user sees the different captures of the product displayed
 
     Examples:
-      |product                      |
-      | Chaussures Hommes de Ville  |
+      | product                    |
+      | Chaussures Hommes de Ville |
+
+  @TEST_OF-1185
+  Scenario Outline:
+    When The user enters "<element>" in the search bar
+    Then The user should see a message "<message>" displayed
+
+    Examples:
+      | element | message              |
+      | ppp     | Aucun produit trouvé |
+      | zzzz    | Aucun produit trouvé |
+      | p@@wk   | Aucun produit trouvé |
 
 
   @TEST_OF-1200
@@ -219,4 +230,26 @@ Feature: As a customer, I am loggin and I want to shop
     Examples:
       | code   | remise | product                      |
 #      | SRDRAV | 10     | Chaise de Bureau Ergonomique |
-      |FDHSTI | 2    | Chaise de Bureau Ergonomique |
+      | FDHSTI | 2      | Chaise de Bureau Ergonomique |
+
+  @TEST_OF-1208
+  Scenario Outline:
+    When User moves to account icon and clicks on Mes favoris
+    Then The user should see a message of absence of products "<message>"
+
+    Examples:
+      | message                                    |
+      | Aucun produit dans vos favoris             |
+
+  @TEST_OF-1205
+  Scenario Outline:
+    When user selects "<product_1>"
+    And user add it to the wishlist
+    And user selects "<product_2>"
+    And user add it to the wishlist
+    When User moves to account icon and clicks on Mes favoris
+    Then The user must see the products displayed "<product_1>" et "<product_2>"
+
+    Examples:
+      | product_1                    | product_2                               |
+      | Chaise de Bureau Ergonomique | Fauteuil Chaise Patchwork, Bois d'hévéa |

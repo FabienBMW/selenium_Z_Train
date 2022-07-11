@@ -158,8 +158,20 @@ public class HomePage extends Page {
     private WebElement productSheet;
     @FindBy(className = "style_attribut_wrapper__zQ3W1")
     private List<WebElement> productsAttribute;
-    @FindBy(className = "style_container_dot__i_gfz")
-    private WebElement productCaptures;
+    @FindBy(css = "#style_wrapper_image__uiCyg > div > div.style_container_dot__i_gfz > button.dot___3c3SI.carousel__dot.carousel__dot--0.carousel__dot--selected")
+    private WebElement productCapture;
+    @FindBy(id = "style_empty_result___y6P_")
+    private WebElement emptyResult;
+    @FindBy(id = "style_input_navbar_search__Scaxy")
+    private WebElement searchBar;
+    @FindBy(id = "style_btn_heart__AzqpS")
+    private WebElement addToWishlistButton;
+    @FindBy(id = "style_btn_close__9uLzQ")
+    private WebElement closeProductDetails;
+    @FindBy(css = "#style_hideDropdown__GBPIF > a:nth-child(1)")
+    private WebElement wishlistButton;
+    @FindBy(css = "#style_btn_heart__AzqpS > svg")
+    private WebElement wishlistButtonSvg;
 
 
     public void goToLoginPage() {
@@ -441,7 +453,33 @@ public class HomePage extends Page {
         return number > 0;
     }
 
-    public void showCaptures() {
-        LOG.info(productCaptures);
+    public boolean isProductCapture() {
+        return shortUntil(visibilityOf(productCapture));
+    }
+
+    public void tapSearchText(String searchText) {
+        if (shortUntil(visibilityOfAllElements(productsName)))
+            sendKeysSlowly(searchBar, searchText);
+    }
+
+    public boolean isEmptyMessage(String message) {
+        if(shortUntil(visibilityOf(emptyResult)))
+            return emptyResult.getText().equals(message);
+        return false;
+    }
+
+    public void addProductToWishlist() {
+        clickOn(addToWishlistButton);
+        if (waitUntil(ExpectedConditions.attributeContains(wishlistButtonSvg, "color", "#FF7643")))
+            clickOn(closeProductDetails);
+    }
+
+    public void goToWishlist() {
+        if (shortUntil(visibilityOf(accountIcon)))
+            action.moveToElement(accountIcon)
+                    .moveToElement(wishlistButton)
+                    .click()
+                    .perform();
+        waitUntil(ExpectedConditions.titleContains("myFavorite"));
     }
 }

@@ -254,6 +254,26 @@ public class HomeSteps extends Page {
 
     @And("The user sees the different captures of the product displayed")
     public void theUserSeesTheDifferentCapturesOfTheProductDisplayed() {
-        homePage.showCaptures();
+        assertTrue(homePage.isProductCapture());
+    }
+
+    @When("The user enters {string} in the search bar")
+    public void theUserEntersElementInTheSearchBar(String searchText) {
+        homePage.tapSearchText(searchText);
+    }
+
+    @Then("The user should see a message {string} displayed")
+    public void theUserShouldSeeAMessageMessageDisplayed(String message) {
+        assertTrue(homePage.isEmptyMessage(message));
+    }
+
+    @And("user add it to the wishlist")
+    public void userAddItToTheWishlist() {
+        homePage.addProductToWishlist();
+    }
+
+    @When("User moves to account icon and clicks on Mes favoris")
+    public void userMovesToAccountIconAndClicksOnMesFavoris() {
+        homePage.goToWishlist();
     }
 }
