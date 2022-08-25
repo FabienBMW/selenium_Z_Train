@@ -253,3 +253,4 @@ Feature: As a customer, I am loggin and I want to shop
     Examples:
       | product_1                    | product_2                               |
       | Chaise de Bureau Ergonomique | Fauteuil Chaise Patchwork, Bois d'hévéa |
+

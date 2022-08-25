@@ -8,12 +8,12 @@ public enum SystemPropertiesReader {
         return INSTANCE;
     }
 
-    public String browser;
-    public boolean headless;
-    public Env env;
+    public final String browser;
+    public final boolean headless;
+    public final Env env;
 
     SystemPropertiesReader() {
-        browser = System.getProperty("browser", "chrome");
+        browser = System.getProperty("browser", "firefox");
         headless = Boolean.parseBoolean(System.getProperty("headless", "false"));
         env = Env.valueOf(System.getProperty("env", "development").toUpperCase());
     }

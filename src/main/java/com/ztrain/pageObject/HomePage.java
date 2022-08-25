@@ -44,15 +44,6 @@ public class HomePage extends Page {
     @FindBy(id = "style_detail_wrapper__a7fpS")
     private WebElement productDetails;
 
-    @FindBy(id = "email_login")
-    private WebElement emailField;
-
-    @FindBy(id = "password_login")
-    private WebElement passwordField;
-
-    @FindBy(id = "btn_login")
-    private WebElement submitButton;
-
     @FindBy(id = "style_btn_add_cart__gTXM7")
     private WebElement addCardButton;
 
@@ -234,10 +225,6 @@ public class HomePage extends Page {
             LOG.info("Items visible in cart");
         else LOG.info("Items not yet visible");
     }
-
-    /*public String displayProductName() {
-        return this.productName.getText();
-    }*/
 
     public void deleteProductCard(String productN) {
         int index = getSpecificWebElement(productName, productN);

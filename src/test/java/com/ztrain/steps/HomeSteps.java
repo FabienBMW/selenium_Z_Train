@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static org.testng.Assert.*;
 
-public class HomeSteps extends Page {
+public class HomeSteps {
     private HomePage homePage;
     private LoginPage loginPage;
     private ScenarioContext context;
@@ -96,10 +96,7 @@ public class HomeSteps extends Page {
     }
 
     //TEST_OF-901: Test the order button
-    @And("User clicks on order button")
-    public void userClicksOnOrderButton() {
-        homePage.validateOder();
-    }
+
 
     @Then("The order validation pop-up is displaying")
     public void theOrderValidationPopUpIsDisplaying() {
@@ -109,6 +106,26 @@ public class HomeSteps extends Page {
     @And("user clicks on cart icon")
     public void userClicksOnCartIcon() {
         homePage.openCard();
+    }
+
+    @And("User clicks on order button")
+    public void userClicksOnOrderButton() {
+        homePage.validateOder();
+    }
+
+    @And("^User fills fields with (.*), (.*), (.*), (.*) and (.*)$")
+    public void userFillsFieldsWithCardNumberExpiredDateCvcAndAdresseDeLivraison(String cardNumber, String expirationDate, String cvc, String address, int methodeLivraison) {
+        homePage.fillPaymentForm(cardNumber, expirationDate, cvc, address, methodeLivraison);
+    }
+
+    @And("User sends the order form")
+    public void userSendsTheOrderForm() {
+        homePage.submitOrderForm();
+    }
+
+    @Then("A validation confirmation message should appear on the screen")
+    public void aValidationConfirmationMessageShouldAppearOnTheScreen() {
+        assertTrue(homePage.isPaymentMessage());
     }
 
     @And("click on the + button to increase the quantity of this product in the cart {string}")
@@ -179,24 +196,9 @@ public class HomeSteps extends Page {
         assertTrue(homePage.isQuantityUpdated(productName, String.valueOf((int) context.get(Context.PRODUCT_QUANTITY) - Integer.parseInt(quantity)) ));
     }
 
-    @And("User sends the order form")
-    public void userSendsTheOrderForm() {
-        homePage.submitOrderForm();
-    }
-
     @Then("A required fields error message should appear under the fields")
     public void aRequiredFieldsErrorMessageShouldAppearUnderTheFields() {
         assertTrue(homePage.isOrderFormErrorMessage());
-    }
-
-    @And("^User fills fields with (.*), (.*), (.*), (.*) and (.*)$")
-    public void userFillsFieldsWithCardNumberExpiredDateCvcAndAdresseDeLivraison(String cardNumber, String expirationDate, String cvc, String address, int methodeLivraison) {
-        homePage.fillPaymentForm(cardNumber, expirationDate, cvc, address, methodeLivraison);
-    }
-
-    @Then("A validation confirmation message should appear on the screen")
-    public void aValidationConfirmationMessageShouldAppearOnTheScreen() {
-        assertTrue(homePage.isPaymentMessage());
     }
 
     @When("User clicks on promo button")

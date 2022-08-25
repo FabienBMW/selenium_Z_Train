@@ -1,7 +1,6 @@
 package com.ztrain.driver;
 
 import com.ztrain.config.SystemPropertiesReader;
-import com.ztrain.config.SystemPropertiesReader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;

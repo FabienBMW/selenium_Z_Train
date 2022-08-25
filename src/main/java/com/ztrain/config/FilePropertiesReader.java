@@ -11,7 +11,7 @@ public enum FilePropertiesReader {
 
     public static FilePropertiesReader getInstance() {return INSTANCE;}
 
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     public final String chromeDriverPath;
     public final String firefoxDriverPath;
